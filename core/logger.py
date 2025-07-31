@@ -29,6 +29,9 @@ def format_key(key):
             keyboard.Key.right: '[RIGHT]'
         }
         return special_keys.get(key, f'[{key.name.upper()}]')
+    
+def flush_buffer():
+    pass
 
 def write_log(key):
     key_str = format_key(key)
