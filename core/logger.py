@@ -43,7 +43,7 @@ def flush_buffer():
             f.write(f"{timestamp} - {buffer}\n")
         buffer = ""
     # Schedule next flush
-    threading.Timer(flush_interval, flush_buffer).start()
+    threading.Timer(FLUSH_INTERVAL, flush_buffer).start()
 
 def write_log(key):
     key_str = format_key(key)
