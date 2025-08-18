@@ -19,3 +19,4 @@ def test_main_silent_mode_launch():
     except subprocess.TimeoutExpired:
         proc.kill()
     assert proc.returncode == 0 or proc.returncode is None
+
